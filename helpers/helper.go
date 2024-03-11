@@ -3,7 +3,7 @@ package helpers
 import (
 	"fmt"
 
-	"golang.org/x/crypto/bcrypt"
+	"github.com/google/uuid"
 )
 
 func PrintErr(err error, messge string) {
@@ -14,18 +14,6 @@ func PrintMsg(msg string) {
 	fmt.Println(msg)
 }
 
-func Hash_pass(pass string) (string, error) {
-
-	password := []byte(pass)
-
-	hashedpass, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-
-	return string(hashedpass), err
-
-}
-
-func VerifyPassword(hashedPassword, password string) error {
-
-	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-
+func GenUuid() string {
+	return uuid.New().String()
 }

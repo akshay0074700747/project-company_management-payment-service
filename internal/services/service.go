@@ -15,7 +15,12 @@ func NewPaymentService(usecase usecases.PaymentUsecaseInterfaces) *PaymentServic
 	}
 }
 
-func (snap *PaymentService) getStages(c *gin.Context) {
+func (snap *PaymentService) AddSubscriptionPlan(c *gin.Context) {
 
-	c.HTML(200, "payment.html", gin.H{})
+	
+}
+
+func (snap *PaymentService) GetallSubscriptionPlans(c *gin.Context) {
+
+	
 }

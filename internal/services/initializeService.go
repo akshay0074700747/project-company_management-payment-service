@@ -30,8 +30,8 @@ func (engine *PaymentEngine) Start(addr string) {
 
 	handler := c.Handler(r)
 
-	// r.GET("/project/snapshots", engine.Srv.GetSnapshots)
-	r.GET("/project/task/stages", engine.Srv.getStages)
+	r.POST("/subscription/plan/add", engine.Srv.AddSubscriptionPlan)
+	r.GET("/subscription/plan", engine.Srv.GetallSubscriptionPlans)
 
 	r.LoadHTMLGlob("payment.html")
 
