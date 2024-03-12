@@ -12,8 +12,8 @@
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-12">
-            <h5 style="display: inline;" class="d-flex">Email :</h5>
-            <p id="email">{{.email}}</p>
+            <h5 style="display: inline;" class="d-flex">UserID :</h5>
+            <p id="userID">{{.userID}}</p>
             <h5 style="display: inline;" class="d-flex">Order ID:</h5>
             <p id="orderid">{{.orderid}}</p>
             <h5 style="display: inline;" class="d-flex">Total:</h5>
@@ -31,7 +31,7 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script>
-    var userid = document.getElementById("email").innerHTML;
+    var userid = document.getElementById("userID").innerHTML;
     var orderid = document.getElementById("orderid").innerHTML;
     var total = document.getElementById("total").innerHTML;
     var orderData = document.getElementById("orderData").innerHTML;
@@ -48,7 +48,7 @@
             verifyPayment(response, userid, orderid);
         },
         "prefill": {
-            "email": "{{.Email}}",
+            "userID": "{{.UserID}}",
             "contact": "{{.Phone_Number}}"
         },
         "notes": {
@@ -77,14 +77,14 @@
         $.ajax({
 
             //passes details as url params
-            url: `/payment-handler?user_id=${userid}&payment_ref=${res.razorpay_payment_id}&order_id=${orderData}
+            url: `/verify/payment?user_id=${userid}&payment_ref=${res.razorpay_payment_id}&order_id=${orderData}
       &signature=${res.razorpay_signature}&id=${orderid}&total=${total}`,
             method: 'GET',
 
             success: (response) => {
                 console.log(response)
-                if (response.data) {
-                    location.href = '/'
+                if (response.Data) {
+                    location.href = '/payment/verified'
                 }
             }
         })

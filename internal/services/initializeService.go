@@ -32,8 +32,13 @@ func (engine *PaymentEngine) Start(addr string) {
 
 	r.POST("/subscription/plan/add", engine.Srv.AddSubscriptionPlan)
 	r.GET("/subscription/plan", engine.Srv.GetallSubscriptionPlans)
+	r.POST("/subscription/plan/subscribe", engine.Srv.subscribe)
+	r.GET("/subscriptions", engine.Srv.getSubscriptions)
+	r.POST("/subscription/plan/subscribe/:orderID/pay", engine.Srv.subscriptionPayment)
+	r.GET("/verify/payment", engine.Srv.verifyPayment)
+	r.GET("/payment/verified", engine.Srv.servePaymentSuccesspage)
 
-	r.LoadHTMLGlob("payment.html")
+	r.LoadHTMLGlob(".html")
 
 	http.ListenAndServe(addr, handler)
 }

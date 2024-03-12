@@ -38,3 +38,49 @@ func (payment *PaymentUseCases) GetSubscriptions() ([]entities.Subscriptions, er
 
 	return res, nil
 }
+
+func (payment *PaymentUseCases) Subcribe(req entities.Orders) (entities.Orders, error) {
+
+	req.OrderID = helpers.GenUuid()
+	res, err := payment.Adapter.Subcribe(req)
+	if err != nil {
+		helpers.PrintErr(err, "erroor happened at Subcribe adapter")
+		return entities.Orders{}, err
+	}
+
+	return res, nil
+
+}
+
+func (payment *PaymentUseCases) GetallSubscriptions() ([]entities.Orders, error) {
+
+	res, err := payment.Adapter.GetallSubscriptions()
+	if err != nil {
+		helpers.PrintErr(err, "error happened at GetallSubscriptions adapter")
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (payment *PaymentUseCases) GetOrderDetails(orderID string) (entities.MakePaymentUsecase, error) {
+
+	res, err := payment.Adapter.GetOrderDetails(orderID)
+	if err != nil {
+		helpers.PrintErr(err, "errror happened at GetOrderDetails adapter")
+		return entities.MakePaymentUsecase{}, err
+	}
+
+	return res, nil
+}
+
+func (payment *PaymentUseCases) MakePayment(req entities.PaymentDetails) error {
+
+	req.PaymentID = helpers.GenUuid()
+	if err := payment.Adapter.MakePayment(req); err != nil {
+		helpers.PrintErr(err, "errorr happened at MakePayment adapter")
+		return err
+	}
+
+	return nil
+}

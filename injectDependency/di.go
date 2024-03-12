@@ -13,7 +13,7 @@ func Initialize(cfg config.Config) *services.PaymentEngine {
 	db := db.ConnectDB(cfg)
 	adapter := adapters.NewPaymentAdapter(db)
 	usecase := usecases.NewPaymentUseCases(adapter)
-	service := services.NewPaymentService(usecase)
+	service := services.NewPaymentService(usecase,cfg)
 
 	return services.NewPaymentEngine(service)
 }
