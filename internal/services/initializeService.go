@@ -34,9 +34,13 @@ func (engine *PaymentEngine) Start(addr string) {
 	r.GET("/subscription/plan", engine.Srv.GetallSubscriptionPlans)
 	r.POST("/subscription/plan/subscribe", engine.Srv.subscribe)
 	r.GET("/subscriptions", engine.Srv.getSubscriptions)
-	r.POST("/subscription/plan/subscribe/:orderID/pay", engine.Srv.subscriptionPayment)
+	r.POST("/subscription/plan/subscribe/order/pay", engine.Srv.subscriptionPayment)
 	r.GET("/verify/payment", engine.Srv.verifyPayment)
 	r.GET("/payment/verified", engine.Srv.servePaymentSuccesspage)
+	r.GET("/payments", engine.Srv.payments)
+	r.GET("/transaction/verify", engine.Srv.verifyTransaction)
+	r.PATCH("/transaction/update", engine.Srv.updateAssetID)
+	r.GET("/transaction/project", engine.Srv.getAssetID)
 
 	r.LoadHTMLGlob(".html")
 

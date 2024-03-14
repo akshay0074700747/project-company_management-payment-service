@@ -100,3 +100,58 @@ func (snap *PaymentAdapter) MakePayment(req entities.PaymentDetails) error {
 
 	return nil
 }
+
+func (snap *PaymentAdapter) GetPaymentDetailsofUser(userID string) ([]entities.PaymentDetails, error) {
+
+	query := "SELECT * FROM payment_details WHERE order_id IN (select order_id from orders WHERE user_id = $1)"
+	var res []entities.PaymentDetails
+
+	if err := snap.DB.Raw(query, userID).Scan(&res).Error; err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (snap *PaymentAdapter) VerifyTransaction(transactionID, userID string) (bool, error) {
+
+	query := "SELECT o.asset_id FROM payment_details p INNER JOIN orders o ON p.order_id = o.order_id AND o.user_id = $1 WHERE payment_id = $2"
+	var res string
+
+	if err := snap.DB.Raw(query, userID, transactionID).Scan(&res).Error; err != nil {
+		return false, err
+	}
+
+	if res != "" {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func (snap *PaymentAdapter) UpdateAsset(req entities.UpdateAssetID) error {
+
+	query := "UPDATE orders SET asset_id = $1 WHERE order_id = (SELECT order_id FROM payment_details WHERE payment_id = $2) AND user_id = $3"
+
+	if err := snap.DB.Exec(query, req.AssetID, req.TransactionID, req.UserID).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (snap *PaymentAdapter) GetAssetID(assetID string) (bool, error) {
+
+	query := "SELECT * FROM orders WHERE asset_id = $1 AND is_payed = true"
+
+	tx := snap.DB.Raw(query, assetID)
+	if tx.Error != nil {
+		return false, tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}

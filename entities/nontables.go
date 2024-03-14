@@ -8,8 +8,14 @@ type Responce struct {
 }
 
 type MakePaymentUsecase struct {
-	OrderID        string
-	UserID         string
-	IsPayed        bool
-	Price          uint
+	OrderID string
+	UserID  string
+	IsPayed bool
+	Price   uint
+}
+
+type UpdateAssetID struct {
+	TransactionID string `json:"TransactionID"`
+	UserID        string `json:"UserID"`
+	AssetID       string `json:"AssetID"`
 }

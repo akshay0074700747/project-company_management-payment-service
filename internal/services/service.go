@@ -85,6 +85,8 @@ func (snap *PaymentService) subscribe(c *gin.Context) {
 		})
 	}
 
+	sub.UserID = c.Request.Context().Value("userID").(string)
+
 	res, err := snap.Usecase.Subcribe(sub)
 	if err != nil {
 		helpers.PrintErr(err, "error happened at Subcribe usecase")
@@ -124,7 +126,7 @@ func (snap *PaymentService) getSubscriptions(c *gin.Context) {
 
 func (snap *PaymentService) subscriptionPayment(c *gin.Context) {
 
-	orderId := c.Param("orderID")
+	orderId := c.Query("orderID")
 
 	orderdata, err := snap.Usecase.GetOrderDetails(orderId)
 
@@ -207,4 +209,116 @@ func (snap *PaymentService) verifyPayment(c *gin.Context) {
 func (snap *PaymentService) servePaymentSuccesspage(c *gin.Context) {
 
 	c.HTML(200, "paymentVerified.html", gin.H{})
+}
+
+func (snap *PaymentService) payments(c *gin.Context) {
+
+	userID := c.Request.Context().Value("userID").(string)
+
+	res, err := snap.Usecase.GetPaymentDetailsofUser(userID)
+	if err != nil {
+		helpers.PrintErr(err, "error happened at GetPaymentDetailsofUser usecase")
+		c.JSON(http.StatusInternalServerError, entities.Responce{
+			StatusCode: 500,
+			Message:    "cant get the payments right now",
+			Error:      err,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, entities.Responce{
+		StatusCode: 200,
+		Message:    "got all payments",
+		Data:       res,
+	})
+}
+
+func (snap *PaymentService) verifyTransaction(c *gin.Context) {
+
+	transactionID := c.Query("transactionID")
+	userID := c.Query("userID")
+
+	res, err := snap.Usecase.VerifyTransaction(transactionID, userID)
+	if err != nil {
+		helpers.PrintErr(err, "error happened at VerifyTransaction usecase")
+		c.JSON(http.StatusInternalServerError, entities.Responce{
+			StatusCode: 500,
+			Data:       false,
+			Error:      err,
+		})
+		return
+	}
+
+	if !res {
+		c.JSON(http.StatusBadRequest, entities.Responce{
+			StatusCode: 500,
+			Data:       false,
+			Error:      nil,
+		})
+	}
+
+	c.JSON(http.StatusOK, entities.Responce{
+		StatusCode: 200,
+		Data:       true,
+		Error:      nil,
+	})
+}
+
+func (snap *PaymentService) updateAssetID(c *gin.Context) {
+
+	var sub entities.UpdateAssetID
+
+	if err := c.BindJSON(&sub); err != nil {
+		helpers.PrintErr(err, "error happened at binding subscriptions")
+		c.AbortWithError(http.StatusInternalServerError, err)
+		c.JSON(http.StatusOK, entities.Responce{
+			StatusCode: http.StatusInternalServerError,
+			Error:      err,
+		})
+		return
+	}
+
+	if err := snap.Usecase.UpdateAsset(sub); err != nil {
+		helpers.PrintErr(err, "error happened at UpdateAsset usecase")
+		c.JSON(http.StatusInternalServerError, entities.Responce{
+			StatusCode: 500,
+			Error:      err,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, entities.Responce{
+		StatusCode: 200,
+		Data:       false,
+		Error:      nil,
+	})
+}
+
+func (snap *PaymentService) getAssetID(c *gin.Context) {
+
+	assetID := c.Query("assetID")
+
+	res, err := snap.Usecase.GetAssetID(assetID)
+	if err != nil {
+		helpers.PrintErr(err, "error happened at GetAssetID usecase")
+		c.JSON(http.StatusInternalServerError, entities.Responce{
+			StatusCode: 500,
+			Error:      err,
+		})
+		return
+	}
+
+	if !res {
+		c.JSON(http.StatusInternalServerError, entities.Responce{
+			StatusCode: 500,
+			Data:       false,
+			Error:      nil,
+		})
+	}
+
+	c.JSON(http.StatusOK, entities.Responce{
+		StatusCode: 200,
+		Data:       true,
+		Error:      nil,
+	})
 }
