@@ -3,7 +3,7 @@ package services
 import (
 	"net/http"
 	"strings"
-
+	"fmt"
 	"github.com/akshay0074700747/Project/config"
 	"github.com/akshay0074700747/Project/entities"
 	"github.com/akshay0074700747/Project/helpers"
@@ -85,7 +85,9 @@ func (snap *PaymentService) subscribe(c *gin.Context) {
 		})
 	}
 
-	sub.UserID = c.Request.Context().Value("userID").(string)
+	sub.UserID = c.Request.Header.Get("X-User-ID")
+	
+	fmt.Println(sub.UserID)
 
 	res, err := snap.Usecase.Subcribe(sub)
 	if err != nil {
@@ -97,12 +99,7 @@ func (snap *PaymentService) subscribe(c *gin.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, entities.Responce{
-		StatusCode: 200,
-		Message:    "successfully added subscription complete the payment as well",
-		Error:      nil,
-		Data:       res,
-	})
+	c.JSON(http.StatusOK, res)
 }
 
 func (snap *PaymentService) getSubscriptions(c *gin.Context) {
@@ -213,7 +210,7 @@ func (snap *PaymentService) servePaymentSuccesspage(c *gin.Context) {
 
 func (snap *PaymentService) payments(c *gin.Context) {
 
-	userID := c.Request.Context().Value("userID").(string)
+	userID := c.Request.Header.Get("X-User-ID")
 
 	res, err := snap.Usecase.GetPaymentDetailsofUser(userID)
 	if err != nil {
@@ -226,11 +223,7 @@ func (snap *PaymentService) payments(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, entities.Responce{
-		StatusCode: 200,
-		Message:    "got all payments",
-		Data:       res,
-	})
+	c.JSON(http.StatusOK, res)
 }
 
 func (snap *PaymentService) verifyTransaction(c *gin.Context) {

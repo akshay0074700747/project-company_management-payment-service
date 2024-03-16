@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"errors"
 	"time"
 
 	"github.com/akshay0074700747/Project/entities"
@@ -42,7 +43,7 @@ func (payment *PaymentAdapter) GetSubscriptions() ([]entities.Subscriptions, err
 
 func (payment *PaymentAdapter) Subcribe(req entities.Orders) (entities.Orders, error) {
 
-	query := "INSERT INTO orders (order_id,user_id,asset_id,subscription_id) VALUES($1,$2,$3,$4) RETURNING order_id,user_id,assett_id,subscription_id,is_payed"
+	query := "INSERT INTO orders (order_id,user_id,asset_id,subscription_id) VALUES($1,$2,$3,$4) RETURNING order_id,user_id,asset_id,subscription_id,is_payed"
 	var res entities.Orders
 	if err := payment.DB.Raw(query, req.OrderID, req.UserID, req.AssetID, req.SubscriptionID).Scan(&res).Error; err != nil {
 		return entities.Orders{}, err
@@ -68,7 +69,7 @@ func (payment *PaymentAdapter) GetOrderDetails(orderID string) (entities.MakePay
 	var res entities.MakePaymentUsecase
 	query := "SELECT o.order_id,o.user_id,o.is_payed,s.price FROM orders o INNER JOIN subscriptions s ON o.subscription_id = s.subscription_id WHERE order_id = $1 "
 
-	if err := payment.DB.Raw(query).Scan(&res).Error; err != nil {
+	if err := payment.DB.Raw(query,orderID).Scan(&res).Error; err != nil {
 		return entities.MakePaymentUsecase{}, err
 	}
 
@@ -118,8 +119,14 @@ func (snap *PaymentAdapter) VerifyTransaction(transactionID, userID string) (boo
 	query := "SELECT o.asset_id FROM payment_details p INNER JOIN orders o ON p.order_id = o.order_id AND o.user_id = $1 WHERE payment_id = $2"
 	var res string
 
-	if err := snap.DB.Raw(query, userID, transactionID).Scan(&res).Error; err != nil {
-		return false, err
+	tx := snap.DB.Raw(query, userID, transactionID).Scan(&res)
+
+	if tx.Error != nil {
+		return false, tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		return false, errors.New("You havent been payed")
 	}
 
 	if res != "" {
