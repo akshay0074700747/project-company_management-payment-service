@@ -69,7 +69,7 @@ func (payment *PaymentAdapter) GetOrderDetails(orderID string) (entities.MakePay
 	var res entities.MakePaymentUsecase
 	query := "SELECT o.order_id,o.user_id,o.is_payed,s.price FROM orders o INNER JOIN subscriptions s ON o.subscription_id = s.subscription_id WHERE order_id = $1 "
 
-	if err := payment.DB.Raw(query,orderID).Scan(&res).Error; err != nil {
+	if err := payment.DB.Raw(query, orderID).Scan(&res).Error; err != nil {
 		return entities.MakePaymentUsecase{}, err
 	}
 
@@ -161,4 +161,16 @@ func (snap *PaymentAdapter) GetAssetID(assetID string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func (snap *PaymentAdapter) GetAssetIDfromOrderID(orderID string) (string, error) {
+
+	query := "SELECT asset_id FROM orders WHERE order_id = $1"
+	var asstID string
+
+	if err := snap.DB.Raw(query, orderID).Scan(&asstID).Error; err != nil {
+		return asstID, err
+	}
+
+	return asstID, nil
 }

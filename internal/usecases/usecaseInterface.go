@@ -13,4 +13,5 @@ type PaymentUsecaseInterfaces interface {
 	VerifyTransaction(string,string)(bool,error)
 	UpdateAsset(entities.UpdateAssetID)(error)
 	GetAssetID(string)(bool,error)
+	GetAssetIDfromOrderID(string)(string,error)
 }

@@ -1,26 +1,34 @@
 package services
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"strings"
-	"fmt"
+
 	"github.com/akshay0074700747/Project/config"
 	"github.com/akshay0074700747/Project/entities"
 	"github.com/akshay0074700747/Project/helpers"
 	"github.com/akshay0074700747/Project/internal/usecases"
+	"github.com/akshay0074700747/projectandCompany_management_protofiles/pb/companypb"
 	"github.com/gin-gonic/gin"
 	"github.com/razorpay/razorpay-go"
 )
 
 type PaymentService struct {
-	Usecase usecases.PaymentUsecaseInterfaces
-	Cfg     config.Config
+	Usecase  usecases.PaymentUsecaseInterfaces
+	Cfg      config.Config
+	CompConn companypb.CompanyServiceClient
 }
 
 func NewPaymentService(usecase usecases.PaymentUsecaseInterfaces, cfg config.Config) *PaymentService {
+
+	client, _ := helpers.DialGrpc(":50003")
+
 	return &PaymentService{
-		Usecase: usecase,
-		Cfg:     cfg,
+		Usecase:  usecase,
+		Cfg:      cfg,
+		CompConn: companypb.NewCompanyServiceClient(client),
 	}
 }
 
@@ -86,7 +94,7 @@ func (snap *PaymentService) subscribe(c *gin.Context) {
 	}
 
 	sub.UserID = c.Request.Header.Get("X-User-ID")
-	
+
 	fmt.Println(sub.UserID)
 
 	res, err := snap.Usecase.Subcribe(sub)
@@ -195,6 +203,20 @@ func (snap *PaymentService) verifyPayment(c *gin.Context) {
 		})
 		return
 	}
+
+	go func() {
+		assetID, err := snap.Usecase.GetAssetIDfromOrderID(orderID)
+		if err != nil {
+			helpers.PrintErr(err, "error happned")
+		}
+		_, err = snap.CompConn.ToggleIsPayed(context.TODO(), &companypb.ToggleIsPayedReq{
+			CompanyID: assetID,
+			IsPayed:   true,
+		})
+		if err != nil {
+			helpers.PrintErr(err, "error happened")
+		}
+	}()
 
 	c.JSON(http.StatusOK, entities.Responce{
 		StatusCode: 200,

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"google.golang.org/grpc"
 )
 
 func PrintErr(err error, messge string) {
@@ -16,4 +17,8 @@ func PrintMsg(msg string) {
 
 func GenUuid() string {
 	return uuid.New().String()
+}
+
+func DialGrpc(addr string) (*grpc.ClientConn, error) {
+	return grpc.Dial(addr, grpc.WithInsecure())
 }

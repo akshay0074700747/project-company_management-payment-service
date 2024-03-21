@@ -127,3 +127,14 @@ func (snap *PaymentUseCases) GetAssetID(assetID string) (bool, error) {
 
 	return res, nil
 }
+
+func (snap *PaymentUseCases) GetAssetIDfromOrderID(orderID string) (string, error) {
+
+	assetID, err := snap.Adapter.GetAssetIDfromOrderID(orderID)
+	if err != nil {
+		helpers.PrintErr(err, "error happened at GetAssetIDfromOrderID")
+		return assetID, err
+	}
+
+	return assetID, nil
+}

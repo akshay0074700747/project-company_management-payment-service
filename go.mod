@@ -4,7 +4,7 @@ go 1.21.5
 
 require (
 	github.com/akshay0074700747/project-company_management-auth-service v0.0.0-20240215064630-1e3640fd4093
-	github.com/akshay0074700747/projectandCompany_management_protofiles v0.0.0-20240308094245-f73c105d7b51
+	github.com/akshay0074700747/projectandCompany_management_protofiles v0.0.0-20240320112615-6f819f70ba91
 	github.com/joho/godotenv v1.5.1
 	golang.org/x/crypto v0.21.0
 	google.golang.org/grpc v1.62.1
@@ -23,7 +23,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/uuid v1.6.0
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
@@ -42,9 +42,9 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/net v0.22.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240205150955-31a09d347014 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
