@@ -23,7 +23,7 @@ type PaymentService struct {
 
 func NewPaymentService(usecase usecases.PaymentUsecaseInterfaces, cfg config.Config) *PaymentService {
 
-	client, _ := helpers.DialGrpc(":50003")
+	client, _ := helpers.DialGrpc("company-service:50003")
 
 	return &PaymentService{
 		Usecase:  usecase,
