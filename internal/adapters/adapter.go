@@ -173,4 +173,4 @@ func (snap *PaymentAdapter) GetAssetIDfromOrderID(orderID string) (string, error
 	}
 
 	return asstID, nil
-}
+}      

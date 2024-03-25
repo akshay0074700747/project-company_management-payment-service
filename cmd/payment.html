@@ -91,7 +91,7 @@
     // }
 
     function verifyPayment(res, userid, orderid) {
-  const url = `/verify/payment?user_id=${userid}&payment_ref=${res.razorpay_payment_id}&order_id=${orderData} &signature=${res.razorpay_signature}&id=${orderid}&total=${total}`;
+  const url = `https://akdigitalsolutions.shop/verify/payment?user_id=${userid}&payment_ref=${res.razorpay_payment_id}&order_id=${orderData} &signature=${res.razorpay_signature}&id=${orderid}&total=${total}`;
 
   fetch(url, {
     method: 'GET'
