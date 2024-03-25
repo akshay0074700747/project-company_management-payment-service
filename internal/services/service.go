@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"net/http"
 	"strings"
@@ -153,6 +154,8 @@ func (snap *PaymentService) subscriptionPayment(c *gin.Context) {
 	}
 
 	client := razorpay.NewClient(snap.Cfg.RAZORPAYID, snap.Cfg.RAZORPAYSECRET)
+
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
 	data := map[string]interface{}{
 		"amount":   orderdata.Price * 100,
