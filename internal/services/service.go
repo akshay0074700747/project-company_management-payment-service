@@ -162,6 +162,7 @@ func (snap *PaymentService) subscriptionPayment(c *gin.Context) {
 
 	body, err := client.Order.Create(data, nil)
 	if err != nil {
+		fmt.Println("cannot process the order ---- ", err)
 		c.JSON(http.StatusInternalServerError, entities.Responce{
 			StatusCode: 500,
 			Message:    "cant process order right now",
@@ -172,6 +173,8 @@ func (snap *PaymentService) subscriptionPayment(c *gin.Context) {
 
 	value := body["id"]
 	razorpayID := value.(string)
+
+	fmt.Println("end reached...")
 
 	c.HTML(200, "payment.html", gin.H{
 		"total_price": orderdata.Price,
