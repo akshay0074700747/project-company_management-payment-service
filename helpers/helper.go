@@ -14,7 +14,7 @@ func PrintErr(err error, messge string) {
 func PrintMsg(msg string) {
 	fmt.Println(msg)
 }
-
+       
 func GenUuid() string {
 	return uuid.New().String()
 }

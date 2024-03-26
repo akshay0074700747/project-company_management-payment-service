@@ -28,8 +28,8 @@
     </div>
 </div>
 
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     var userid = document.getElementById("userID").innerHTML;
     var orderid = document.getElementById("orderid").innerHTML;
@@ -74,7 +74,7 @@
     }  
 
     function verifyPayment(res, userid, orderid) {
-        $.ajax({
+        jQuery.ajax({
 
             //passes details as url params
             url: `/verify/payment?user_id=${userid}&payment_ref=${res.razorpay_payment_id}&order_id=${orderData}
