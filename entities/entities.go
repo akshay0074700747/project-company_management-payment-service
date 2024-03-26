@@ -16,7 +16,7 @@ type Subscriptions struct {
 	Plan           string `json:"plan"`
 }
 
-type Orders struct {
+type Orders struct {       
 	OrderID        string `gorm:"primaryKey" json:"OrderID"`
 	UserID         string `json:"UserID"`
 	AssetID        string `json:"AssetID"`
