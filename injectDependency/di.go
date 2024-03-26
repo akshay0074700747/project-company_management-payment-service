@@ -10,7 +10,7 @@ import (
 
 func Initialize(cfg config.Config) *services.PaymentEngine {
 
-	db := db.ConnectDB(cfg)
+	db := db.ConnectDB(cfg)  
 	adapter := adapters.NewPaymentAdapter(db)
 	usecase := usecases.NewPaymentUseCases(adapter)
 	service := services.NewPaymentService(usecase,cfg)   
