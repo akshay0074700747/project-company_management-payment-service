@@ -22,7 +22,7 @@ func LoadConfigurations() (Config, error) {
 		return Config{}, err
 	}
 
-	var conf Config    
+	var conf Config         
 
 	conf.DBhost = os.Getenv("dbhost")
 	conf.DBport = os.Getenv("dbport")
