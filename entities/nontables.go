@@ -11,7 +11,7 @@ type MakePaymentUsecase struct {
 	OrderID string
 	UserID  string
 	IsPayed bool
-	Price   uint
+	Price   uint     
 }
 
 type UpdateAssetID struct {
