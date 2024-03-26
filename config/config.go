@@ -27,7 +27,7 @@ func LoadConfigurations() (Config, error) {
 	conf.DBhost = os.Getenv("dbhost")
 	conf.DBport = os.Getenv("dbport")
 	conf.DBname = os.Getenv("dbname")
-	conf.DBpassword = os.Getenv("dbpassword")
+	conf.DBpassword = os.Getenv("dbpassword")    
 	conf.DBuser = os.Getenv("dbuser")
 	conf.RAZORPAYID = os.Getenv("RAZORPAYID")
 	conf.RAZORPAYSECRET = os.Getenv("RAZORPAYSECRET")
